@@ -1,7 +1,7 @@
 var game;
 var fieldSize = 7;
 var orbColors = 6;
-var orbSize = 100;
+var orbSize = 50;
 //
 var swapSpeed = 200;
 var fallSpeed = 1000;
@@ -14,8 +14,8 @@ var orbGroup;
 var selectedOrb;
 var canPick = true;
 
-window.onload = function() {	        
-	game = new Phaser.Game(700, 700);
+window.onload = function() {
+	game = new Phaser.Game(700,700); // iPhone: 320,480);
 	game.state.add("PlayGame", playGame)
 	game.state.start("PlayGame");
 }
@@ -23,7 +23,7 @@ window.onload = function() {
 var playGame = function(game){}
 playGame.prototype = {
 	preload: function(){
-          game.load.spritesheet("orbs", "assets/sprites/orbs.png", orbSize, orbSize);	
+          game.load.spritesheet("orbs", "assets/sprites/orbs.png", orbSize, orbSize);
 	},
 	create: function(){
           drawField();
@@ -31,7 +31,7 @@ playGame.prototype = {
           game.input.onDown.add(orbSelect);
           game.input.onUp.add(orbDeselect);
 	}
-}	
+}
 
 function drawField(){
      orbGroup = game.add.group();
@@ -42,13 +42,13 @@ function drawField(){
                orb.anchor.set(0.5);
                orbGroup.add(orb);
                do{
-                    var randomColor = game.rnd.between(0, orbColors - 1);  
+                    var randomColor = game.rnd.between(0, orbColors - 1);
                     orb.frame = randomColor;
                     gameArray[i][j] = {
                          orbColor: randomColor,
                          orbSprite: orb
                     }
-               } while(isMatch(i, j));   
+               } while(isMatch(i, j));
           }
      }
      selectedOrb = null;
@@ -71,25 +71,25 @@ function orbSelect(e){
                          selectedOrb.orbSprite.scale.setTo(1);
                          selectedOrb = null;
                     }
-                    else{     
+                    else{
                          if(areNext(pickedOrb, selectedOrb)){
                               selectedOrb.orbSprite.scale.setTo(1);
-                              swapOrbs(selectedOrb, pickedOrb, true);                  
+                              swapOrbs(selectedOrb, pickedOrb, true);
                          }
                          else{
                               selectedOrb.orbSprite.scale.setTo(1);
-                              pickedOrb.orbSprite.scale.setTo(1.2); 
-                              selectedOrb = pickedOrb;  
-                              game.input.addMoveCallback(orbMove);      
+                              pickedOrb.orbSprite.scale.setTo(1.2);
+                              selectedOrb = pickedOrb;
+                              game.input.addMoveCallback(orbMove);
                          }
                     }
-               }     
+               }
           }
      }
 }
 
 function orbDeselect(e){
-     game.input.deleteMoveCallback(orbMove);     
+     game.input.deleteMoveCallback(orbMove);
 }
 
 function orbMove(event, pX, pY){
@@ -117,18 +117,18 @@ function orbMove(event, pX, pY){
                }
           }
           if(deltaRow + deltaCol != 0){
-               var pickedOrb = gemAt(getOrbRow(selectedOrb) + deltaRow, getOrbCol(selectedOrb) + deltaCol); 
+               var pickedOrb = gemAt(getOrbRow(selectedOrb) + deltaRow, getOrbCol(selectedOrb) + deltaCol);
                if(pickedOrb != -1){
                     selectedOrb.orbSprite.scale.setTo(1);
                     swapOrbs(selectedOrb, pickedOrb, true);
                     game.input.deleteMoveCallback(orbMove);
-               }    
+               }
           }
      }
 }
 
-function swapOrbs(orb1, orb2, swapBack){ 
-     canPick = false;   
+function swapOrbs(orb1, orb2, swapBack){
+     canPick = false;
      var fromColor = orb1.orbColor;
      var fromSprite = orb1.orbSprite;
      var toColor = orb2.orbColor;
@@ -140,24 +140,24 @@ function swapOrbs(orb1, orb2, swapBack){
      var orb1Tween = game.add.tween(gameArray[getOrbRow(orb1)][getOrbCol(orb1)].orbSprite).to({
           x: getOrbCol(orb1) * orbSize + orbSize / 2,
           y: getOrbRow(orb1) * orbSize + orbSize / 2
-     }, swapSpeed, Phaser.Easing.Linear.None, true);     
+     }, swapSpeed, Phaser.Easing.Linear.None, true);
      var orb2Tween = game.add.tween(gameArray[getOrbRow(orb2)][getOrbCol(orb2)].orbSprite).to({
           x: getOrbCol(orb2) * orbSize + orbSize / 2,
           y: getOrbRow(orb2) * orbSize + orbSize / 2
-     }, swapSpeed, Phaser.Easing.Linear.None, true); 
+     }, swapSpeed, Phaser.Easing.Linear.None, true);
      orb2Tween.onComplete.add(function(){
           if(!matchInBoard() && swapBack){
-               swapOrbs(orb1, orb2, false);          
+               swapOrbs(orb1, orb2, false);
           }
-          else{ 
+          else{
                if(matchInBoard()){
                     handleMatches();
                }
-               else{        
+               else{
                     canPick = true;
                     selectedOrb = null;
                }
-          }    
+          }
      });
 }
 
@@ -185,11 +185,11 @@ function getOrbCol(orb){
 }
 
 function isHorizontalMatch(row, col){
-     return gemAt(row, col).orbColor == gemAt(row, col - 1).orbColor && gemAt(row, col).orbColor == gemAt(row, col - 2).orbColor; 
+     return gemAt(row, col).orbColor == gemAt(row, col - 1).orbColor && gemAt(row, col).orbColor == gemAt(row, col - 2).orbColor;
 }
 
 function isVerticalMatch(row, col){
-     return gemAt(row, col).orbColor == gemAt(row - 1, col).orbColor && gemAt(row, col).orbColor == gemAt(row - 2, col).orbColor; 
+     return gemAt(row, col).orbColor == gemAt(row - 1, col).orbColor && gemAt(row, col).orbColor == gemAt(row - 2, col).orbColor;
 }
 
 function isMatch(row, col){
@@ -207,8 +207,8 @@ function matchInBoard(){
      return false;
 }
 
-function handleMatches(){   
-     removeMap = []; 
+function handleMatches(){
+     removeMap = [];
      for(var i = 0; i < fieldSize; i++){
           removeMap[i] = [];
           for(var j = 0; j < fieldSize; j++){
@@ -225,10 +225,10 @@ function handleVerticalMatches(){
           var colorStreak = 1;
           var currentColor = -1;
           var startStreak = 0;
-          for(var j = 0; j < fieldSize; j++){ 
+          for(var j = 0; j < fieldSize; j++){
                if(gemAt(j, i).orbColor == currentColor){
                     colorStreak ++;
-               }              
+               }
                if(gemAt(j, i).orbColor != currentColor || j == fieldSize - 1){
                     if(colorStreak >= 3){
                          console.log("VERTICAL :: Length = "+colorStreak + " :: Start = ("+startStreak+","+i+") :: Color = "+currentColor);
@@ -249,10 +249,10 @@ function handleHorizontalMatches(){
           var colorStreak = 1;
           var currentColor = -1;
           var startStreak = 0;
-          for(var j = 0; j < fieldSize; j++){ 
+          for(var j = 0; j < fieldSize; j++){
                if(gemAt(i, j).orbColor == currentColor){
                     colorStreak ++;
-               }              
+               }
                if(gemAt(i, j).orbColor != currentColor || j == fieldSize - 1){
                     if(colorStreak >= 3){
                          console.log("HORIZONTAL :: Length = "+colorStreak + " :: Start = ("+i+","+startStreak+") :: Color = "+currentColor);
@@ -284,10 +284,10 @@ function destroyOrbs(){
                               makeOrbsFall();
                               if(fastFall){
                                    replenishField();
-                              }    
+                              }
                          }
                     });
-                    gameArray[i][j] = null;  
+                    gameArray[i][j] = null;
                }
           }
      }
@@ -303,11 +303,11 @@ function makeOrbsFall(){
                     if(fallTiles > 0){
                          if(!fastFall && fallTiles > 1){
                               fallTiles = 1;
-                              restart = true;                             
+                              restart = true;
                          }
                          var orb2Tween = game.add.tween(gameArray[i][j].orbSprite).to({
                               y: gameArray[i][j].orbSprite.y + fallTiles * orbSize
-                         }, fallSpeed, Phaser.Easing.Linear.None, true); 
+                         }, fallSpeed, Phaser.Easing.Linear.None, true);
                          fallen ++;
                          orb2Tween.onComplete.add(function(){
                               fallen --;
@@ -319,12 +319,12 @@ function makeOrbsFall(){
                                         if(!fastFall){
                                              replenishField();
                                         }
-                                   }      
+                                   }
                               }
                          })
                          gameArray[i + fallTiles][j] = {
                               orbSprite: gameArray[i][j].orbSprite,
-                              orbColor: gameArray[i][j].orbColor     
+                              orbColor: gameArray[i][j].orbColor
                          }
                          gameArray[i][j] = null;
                     }
@@ -332,7 +332,7 @@ function makeOrbsFall(){
           }
      }
      if(fallen == 0){
-          replenishField();     
+          replenishField();
      }
 }
 
@@ -344,13 +344,13 @@ function replenishField(){
           if(emptySpots > 0){
                if(!fastFall && emptySpots > 1){
                     emptySpots = 1;
-                    restart = true;   
+                    restart = true;
                }
                for(i = 0; i < emptySpots; i++){
                     var orb = game.add.sprite(orbSize * j + orbSize / 2, - (orbSize * (emptySpots - 1 - i) + orbSize / 2), "orbs");
                     orb.anchor.set(0.5);
                     orbGroup.add(orb);
-                    var randomColor = game.rnd.between(0, orbColors - 1);  
+                    var randomColor = game.rnd.between(0, orbColors - 1);
                     orb.frame = randomColor;
                     gameArray[i][j] = {
                          orbColor: randomColor,
@@ -359,7 +359,7 @@ function replenishField(){
                     var orb2Tween = game.add.tween(gameArray[i][j].orbSprite).to({
                          y: orbSize * i + orbSize / 2
                     }, fallSpeed, Phaser.Easing.Linear.None, true);
-                    replenished ++;  
+                    replenished ++;
                     orb2Tween.onComplete.add(function(){
                          replenished --;
                          if(replenished == 0){
@@ -373,10 +373,10 @@ function replenishField(){
                                    else{
                                         canPick = true;
                                         selectedOrb = null;
-                                   }  
+                                   }
                               }
                          }
-                    }) 
+                    })
                }
           }
      }
@@ -386,7 +386,7 @@ function holesBelow(row, col){
      var result = 0;
      for(var i = row + 1; i < fieldSize; i++){
           if(gameArray[i][col] == null){
-               result ++;          
+               result ++;
           }
      }
      return result;
@@ -396,8 +396,8 @@ function holesInCol(col){
      var result = 0;
      for(var i = 0; i < fieldSize; i++){
           if(gameArray[i][col] == null){
-               result ++;          
+               result ++;
           }
      }
-     return result;     
+     return result;
 }
