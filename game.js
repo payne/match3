@@ -15,7 +15,7 @@ var selectedOrb;
 var canPick = true;
 
 window.onload = function() {
-	game = new Phaser.Game(700,700); // iPhone: 320,480);
+	game = new Phaser.Game(320,480); // iPhone: 320,480);
 	game.state.add("PlayGame", playGame)
 	game.state.start("PlayGame");
 }
